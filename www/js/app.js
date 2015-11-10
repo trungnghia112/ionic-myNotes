@@ -6,18 +6,7 @@
 var app = angular.module('starter', ['ionic']);
 
 
-var notes = [
-    {
-        id: '1',
-        title: "haha",
-        description: "mo ta note cua toi"
-    },
-    {
-        id: '2',
-        title: "hehe",
-        description: "mo ta note cua toi 2"
-    }
-];
+var notes = [];
 function getNote(noteId) {
     for (var i = 0; i < notes.length; i++) {
         if (notes[i].id === noteId) {
@@ -36,20 +25,47 @@ function updateNote(note) {
     }
 };
 
+function addNote(note) {
+    notes.push(note);
+};
+
 app.config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider.state('list', {
         url: '/list',
         templateUrl: '/templates/list.html'
     });
+
+    $stateProvider.state('add', {
+        url: '/add',
+        templateUrl: '/templates/edit.html',
+        controller: 'addCtrl'
+    });
+
     $stateProvider.state('edit', {
         url: '/edit/:noteId',
-        templateUrl: '/templates/edit.html'
+        templateUrl: '/templates/edit.html',
+        controller: 'editCtrl'
     });
     $urlRouterProvider.otherwise('/list');
 });
 
 app.controller('listCtrl', function ($scope) {
     $scope.notes = notes;
+});
+
+app.controller('addCtrl', function ($scope, $state) {
+
+    $scope.note = {
+        id: new Date().getTime().toString(),
+        title:"",
+        description:""
+    };
+
+    $scope.save = function () {
+        addNote($scope.note);
+        $state.go('list');
+    };
+
 });
 
 app.controller('editCtrl', function ($scope, $state) {
