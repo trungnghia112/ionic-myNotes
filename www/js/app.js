@@ -26,10 +26,21 @@ app.config(function ($stateProvider, $urlRouterProvider) {
 });
 
 app.controller('listCtrl', function ($scope, NoteStore) {
+
+    $scope.reordering = false;
+
     $scope.notes = NoteStore.list();
     $scope.remove = function (noteId) {
         NoteStore.remove(noteId);
+    };
+    $scope.moveItem = function (note, fromIndex, toIndex) {
+        //console.log(note, fromIndex, toIndex);
+        NoteStore.moveItem(note, fromIndex, toIndex);
     }
+    $scope.toggleReordering = function () {
+        $scope.reordering = !$scope.reordering;
+    }
+
 });
 
 app.controller('addCtrl', function ($scope, $state, NoteStore) {

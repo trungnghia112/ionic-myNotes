@@ -2,7 +2,7 @@ angular.module('MyNotes.notestore', [])
     .factory('NoteStore', function () {
         var notes = angular.fromJson(window.localStorage['notes'] || '[]');
 
-        function store_lc() {
+        function storeToLocal() {
             window.localStorage['notes'] = angular.toJson(notes);
         }
 
@@ -20,13 +20,13 @@ angular.module('MyNotes.notestore', [])
             },
             add: function (note) {
                 notes.push(note);
-                store_lc();
+                storeToLocal();
             },
             update: function (note) {
                 for (var i = 0; i < notes.length; i++) {
                     if (notes[i].id === note.id) {
                         notes[i] = note;
-                        store_lc();
+                        storeToLocal();
                         return;
                     }
                 }
@@ -35,10 +35,16 @@ angular.module('MyNotes.notestore', [])
                 for (var i = 0; i < notes.length; i++) {
                     if (notes[i].id === noteId) {
                         notes.splice(i, 1);
-                        store_lc();
+                        storeToLocal();
                         return;
                     }
                 }
+            },
+            moveItem: function (note, fromIndex, toIndex) {
+                //Move the item in the array
+                notes.splice(fromIndex, 1);
+                notes.splice(toIndex, 0, note);
+                storeToLocal();
             }
         }
     });
